@@ -5,6 +5,7 @@ import { connectDb } from "./data/database.js";
 import { config } from "dotenv";
 import cookieParser from "cookie-parser";
 import { errorMiddleware } from "./middlewares/error.js";
+import cors from "cors";
 
 const app = express();
 
@@ -16,6 +17,13 @@ connectDb();
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(
+  cors({
+    origin: [process.env.FRONTEND_URL],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/task", taskRouter);
@@ -25,7 +33,7 @@ app.get("/", (req, res) => {
 });
 
 app.listen(process.env.PORT, () => {
-  console.log("Server is created");
+  console.log(`Server is working on port:${process.env.PORT} in ${process.env.NODE_ENV} mode`);
 });
 
 //using error middleware
